@@ -33,6 +33,7 @@ export interface IWalletConnectorProps {
   onConnect: (error: Error | null, walletInstance: IWallet) => void;
   chainId?: number;
   onDisconnect: (error: Error | null) => void;
+  onChange?: (address: string) => void;
   connectButton?: React.ReactNode;
   disconnectButton?: React.ReactNode;
 }
@@ -127,8 +128,10 @@ export function WalletConnector(props: IWalletConnectorProps) {
   }, []);
 
   const handleMetamaskChangeAccount = (accounts: string[]) => {
-    if (accounts.length > 0 && context.address !== accounts[0])
+    if (accounts.length > 0 && context.address !== accounts[0]) {
       overrideDispatch('metamask-change-account', { address: accounts[0] });
+      if (props.onChange) props.onChange(accounts[0]);
+    }
   };
 
   // Metamask strongly recommend refresh web page

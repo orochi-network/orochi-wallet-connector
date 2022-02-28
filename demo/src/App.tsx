@@ -15,6 +15,8 @@ function App() {
     }
   };
 
+  const onChange = (address: string) => setAddress(address);
+
   const onDisconnect = useCallback((error: Error | null) => {
     if (!error) {
       setWallet(null);
@@ -25,7 +27,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <WalletConnector onConnect={onConnect} chainId={56} onDisconnect={onDisconnect} />
+        <WalletConnector onConnect={onConnect} chainId={56} onChange={onChange} onDisconnect={onDisconnect} />
         <div>
           <p>Connected address: {address || '...'}</p>
         </div>
