@@ -78,11 +78,17 @@ export function WalletConnector(props: IWalletConnectorProps) {
       wallet
         .connect(getChainId())
         .then((address: string) => {
+          const chainId = getChainId();
           if (typeof localStorage !== 'undefined') {
             localStorage.setItem('wallet-connector-type', EConnectType.metamask);
-            localStorage.setItem('wallet-connector-chain-id', getChainId());
+            localStorage.setItem('wallet-connector-chain-id', chainId);
           }
-          overrideDispatch('metamask-connected', { connected: true, type: EConnectType.metamask, address });
+          overrideDispatch('metamask-connected', {
+            connected: true,
+            type: EConnectType.metamask,
+            address,
+            chainId: chainId,
+          });
           props.onConnect(null, wallet);
           setIsConnected(true);
           wallet.onDisconnect(() => {
