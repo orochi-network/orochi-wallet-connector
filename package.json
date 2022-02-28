@@ -30,8 +30,8 @@
   "scripts": {
     "build:esm": "tsc && mkdir -p ./build/esm/static && cp ./src/static/*.* ./build/esm/static",
     "build:cjs": "tsc --module commonjs --outDir build/cjs && mkdir -p ./build/cjs/static && cp ./src/static/*.* ./build/cjs/static",
-    "build": "yarn build:esm && yarn build:cjs",
-    "dev": "npx nodemon -e ts,tsx -w ./src -x \"yarn build\"",
+    "build": "npm run build:esm && npm run build:cjs",
+    "dev": "npx nodemon -e ts,tsx -w ./src -x \"npm run build\"",
     "demo": "cd ./demo && yarn start",
     "fix": "eslint --config .eslintrc.json --fix --ignore-path .eslintignore ./src/**/*.ts",
     "check": "npm run fix && npx prettier --check --write ./src/**/* && npm run build",
