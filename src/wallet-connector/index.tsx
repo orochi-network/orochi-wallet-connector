@@ -33,6 +33,7 @@ export interface IWalletConnectorProps {
   onConnect: (error: Error | null, walletInstance: IWallet) => void;
   chainId?: number;
   onDisconnect: (error: Error | null) => void;
+  onChange?: (address: string) => void;
   connectButton?: React.ReactNode;
   disconnectButton?: React.ReactNode;
 }
@@ -77,11 +78,17 @@ export function WalletConnector(props: IWalletConnectorProps) {
       wallet
         .connect(getChainId())
         .then((address: string) => {
+          const chainId = getChainId();
           if (typeof localStorage !== 'undefined') {
             localStorage.setItem('wallet-connector-type', EConnectType.metamask);
-            localStorage.setItem('wallet-connector-chain-id', getChainId());
+            localStorage.setItem('wallet-connector-chain-id', chainId);
           }
-          overrideDispatch('metamask-connected', { connected: true, type: EConnectType.metamask, address });
+          overrideDispatch('metamask-connected', {
+            connected: true,
+            type: EConnectType.metamask,
+            address,
+            chainId: chainId,
+          });
           props.onConnect(null, wallet);
           setIsConnected(true);
           wallet.onDisconnect(() => {
@@ -124,6 +131,34 @@ export function WalletConnector(props: IWalletConnectorProps) {
         }
       }
     }
+  }, []);
+
+  const handleMetamaskChangeAccount = (accounts: string[]) => {
+    if (accounts.length > 0 && context.address !== accounts[0]) {
+      overrideDispatch('metamask-change-account', { address: accounts[0] });
+      if (props.onChange) props.onChange(accounts[0]);
+    }
+  };
+
+  // Metamask strongly recommend refresh web page
+  const handleMetamaskChangeChain = () => {
+    window.location.reload();
+  };
+
+  // Handle user changing their account or chainId with metamask
+  useEffect(() => {
+    if (window.ethereum) {
+      const { ethereum } = window;
+      ethereum.on('chainChanged', handleMetamaskChangeChain);
+      ethereum.on('accountsChanged', handleMetamaskChangeAccount);
+    }
+    return () => {
+      if (window.ethereum) {
+        const { ethereum } = window;
+        ethereum.removeListener('chainChanged', handleMetamaskChangeChain);
+        ethereum.removeListener('accountsChanged', handleMetamaskChangeAccount);
+      }
+    };
   }, []);
 
   const onConnectWalletConnect = () => {
