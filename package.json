@@ -27,15 +27,6 @@
     "prettier": "^2.5.1",
     "typescript": "^4.5.5"
   },
-  "watch": {
-    "build": {
-      "patterns": [
-        "src"
-      ],
-      "extensions": "js,jsx,ts,tsx",
-      "ignore": "node_modules"
-    }
-  },
   "scripts": {
     "build:esm": "tsc && mkdir -p ./build/esm/static && cp ./src/static/*.* ./build/esm/static",
     "build:cjs": "tsc --module commonjs --outDir build/cjs && mkdir -p ./build/cjs/static && cp ./src/static/*.* ./build/cjs/static",
