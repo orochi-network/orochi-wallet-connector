@@ -126,6 +126,32 @@ export function WalletConnector(props: IWalletConnectorProps) {
     }
   }, []);
 
+  const handleMetamaskChangeAccount = (accounts: string[]) => {
+    if (accounts.length > 0 && context.address !== accounts[0])
+      overrideDispatch('metamask-change-account', { address: accounts[0] });
+  };
+
+  // Metamask strongly recommend refresh web page
+  const handleMetamaskChangeChain = () => {
+    window.location.reload();
+  };
+
+  // Handle user changing their account or chainId with metamask
+  useEffect(() => {
+    if (window.ethereum) {
+      const { ethereum } = window;
+      ethereum.on('chainChanged', handleMetamaskChangeChain);
+      ethereum.on('accountsChanged', handleMetamaskChangeAccount);
+    }
+    return () => {
+      if (window.ethereum) {
+        const { ethereum } = window;
+        ethereum.removeListener('chainChanged', handleMetamaskChangeChain);
+        ethereum.removeListener('accountsChanged', handleMetamaskChangeAccount);
+      }
+    };
+  }, []);
+
   const onConnectWalletConnect = () => {
     const wallet = CoreWalletConnect.getInstance();
     wallet
