@@ -87,7 +87,7 @@ export function WalletConnector(props: IWalletConnectorProps) {
             connected: true,
             type: EConnectType.metamask,
             address,
-            chainId: chainId,
+            chainId,
           });
           props.onConnect(null, wallet);
           setIsConnected(true);

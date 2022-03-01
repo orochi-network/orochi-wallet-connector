@@ -12,6 +12,7 @@
   "settings": {
     "import/resolver": {
       "node": {
+        "moduleDirectory": ["node_modules", "demo/node_modules", "src"],
         "extensions": [".js", ".jsx", ".ts", ".d.ts", ".tsx"]
       }
     }
