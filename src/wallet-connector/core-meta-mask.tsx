@@ -4,16 +4,17 @@ import { ITransaction, IWallet } from './core';
 import { networkData, toChainIdString } from './utilities';
 
 type TRpcMethod =
+  | 'eth_accounts'
   | 'eth_requestAccounts'
   | 'eth_sendTransaction'
   | 'wallet_switchEthereumChain'
   | 'wallet_addEthereumChain'
-  | 'personal_sign';
+  | 'personal_sign'
+  | 'eth_chainId';
 
 declare let ethereum: {
   request: (rpcRequest: { method: TRpcMethod; params?: any[] }) => Promise<any>;
   chainId: string;
-  selectedAddress: string | null;
   on: (event: string, handler: (error: any) => void) => void;
 };
 
@@ -45,7 +46,8 @@ export class CoreMetaMask implements IWallet {
     this.address = walletAddress;
     this.chainId = chainId;
     // We are on different network
-    if (ethereum.chainId !== toChainIdString(chainId)) {
+    const currentChainId = await ethereum.request({ method: 'eth_chainId' });
+    if (currentChainId !== toChainIdString(chainId)) {
       await this.switchNetwork(chainId);
     }
     return walletAddress;
@@ -64,9 +66,10 @@ export class CoreMetaMask implements IWallet {
   }
 
   public async getAddress(): Promise<string> {
-    if (ethereum.selectedAddress !== null && !ethers.utils.isAddress(this.address)) {
+    const [address]: [string] = await ethereum.request({ method: 'eth_accounts' });
+    if (address && !ethers.utils.isAddress(address)) {
       // Try to reconnect to correct the issue
-      this.address = ethereum.selectedAddress;
+      this.address = address;
     }
     return this.address;
   }
@@ -91,7 +94,7 @@ export class CoreMetaMask implements IWallet {
   }
 
   public isConnected(): boolean {
-    return ethers.utils.isAddress(ethereum.selectedAddress || '');
+    return ethers.utils.isAddress(this.address || '');
   }
 
   public async signMessage(message: string): Promise<string> {
