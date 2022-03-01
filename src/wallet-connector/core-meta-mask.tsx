@@ -9,7 +9,8 @@ type TRpcMethod =
   | 'eth_sendTransaction'
   | 'wallet_switchEthereumChain'
   | 'wallet_addEthereumChain'
-  | 'personal_sign';
+  | 'personal_sign'
+  | 'eth_chainId';
 
 declare let ethereum: {
   request: (rpcRequest: { method: TRpcMethod; params?: any[] }) => Promise<any>;
@@ -45,7 +46,8 @@ export class CoreMetaMask implements IWallet {
     this.address = walletAddress;
     this.chainId = chainId;
     // We are on different network
-    if (ethereum.chainId !== toChainIdString(chainId)) {
+    const currentChainId = await ethereum.request({ method: 'eth_chainId' });
+    if (currentChainId !== toChainIdString(chainId)) {
       await this.switchNetwork(chainId);
     }
     return walletAddress;
