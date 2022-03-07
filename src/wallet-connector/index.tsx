@@ -44,7 +44,6 @@ export const SupportedNetwork = new Map<number, string>([
   [137, 'Polygon Mainnet'],
   [250, 'Fantom Opera'],
   [4002, 'Fantom Testnet'],
-  [31337, 'Localhost'], // Hardhat localhost
 ]);
 
 export const DefaultChainID = 56; // Binance Smart Chain
