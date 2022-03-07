@@ -10,6 +10,27 @@ export const networkData: { [key: string]: any } = {
     rpcUrls: ['https://bsc-dataseed.binance.org/'],
     blockExplorerUrls: ['https://bscscan.com/'],
   },
+  '0xfa': {
+    chainId: '0xfa',
+    chainName: 'Fantom Opera',
+    nativeCurrency: { name: 'FTM', symbol: 'FTM', decimals: 18 },
+    rpcUrls: ['https://rpc2.fantom.network/'],
+    blockExplorerUrls: ['https://ftmscan.com/'],
+  },
+  '0xfa2': {
+    chainId: '0xfa2',
+    chainName: 'Fantom Testnet',
+    nativeCurrency: { name: 'FTM', symbol: 'FTM', decimals: 18 },
+    rpcUrls: ['https://xapi.testnet.fantom.network/lachesis'],
+    blockExplorerUrls: ['https://testnet.ftmscan.com'],
+  },
+  '0x7a69': {
+    chainId: '0x7a69',
+    chainName: 'Localhost',
+    nativeCurrency: { name: 'TEST', symbol: 'TEST', decimals: 18 },
+    rpcUrls: ['http://127.0.0.1:8545'],
+    blockExplorerUrls: ['http://127.0.0.1:8545'],
+  },
 };
 
 const onceSync = new Map<string, boolean>();
