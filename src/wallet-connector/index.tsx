@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect, useMemo } from 'react';
+import React, { useState, useReducer, useEffect, cloneElement } from 'react';
 import { Buffer as safeBuffer } from 'safe-buffer';
 import Button from '@mui/material/Button';
 import { WalletConnectorDialog } from './dialog-select-wallet';
@@ -34,8 +34,8 @@ export interface IWalletConnectorProps {
   chainId?: number;
   onDisconnect: (error: Error | null) => void;
   onChange?: (address: string) => void;
-  connectButton?: React.ReactNode;
-  disconnectButton?: React.ReactNode;
+  connectButton?: React.ReactElement;
+  disconnectButton?: React.ReactElement;
 }
 
 export const SupportedNetwork = new Map<number, string>([
@@ -221,32 +221,12 @@ export function WalletConnector(props: IWalletConnectorProps) {
     }
   };
 
-  const CustomConnectButton: any = useMemo(() => props.connectButton || Button, [props.connectButton]);
-
-  const getPropsCustomConnectButton: any = useMemo(
-    () => (props.connectButton ? {} : { variant: 'contained' }),
-    [props.connectButton],
-  );
-
-  const CustomDisconnectButton: any = useMemo(() => props.disconnectButton || Button, [props.disconnectButton]);
-
-  const getPropsCustomDisconnectButton: any = useMemo(
-    () => (props.disconnectButton ? {} : { variant: 'contained' }),
-    [props.disconnectButton],
-  );
-
   return (
     <>
       <WalletConnectorContext.Provider value={{ ...context, dispatch: overrideDispatch }}>
-        {!isConnected ? (
-          <CustomConnectButton {...getPropsCustomConnectButton} onClick={handleButtonConnect}>
-            Connect
-          </CustomConnectButton>
-        ) : (
-          <CustomDisconnectButton {...getPropsCustomDisconnectButton} onClick={handleButtonDisconnect}>
-            Disconnect
-          </CustomDisconnectButton>
-        )}
+        {!isConnected ?
+            cloneElement(props.connectButton || <Button variant='contained'>Connect</Button>, {onClick: handleButtonConnect }) :
+            cloneElement(props.disconnectButton || <Button variant='contained'>Disconnect</Button>, {onClick: handleButtonDisconnect })}
         <WalletConnectorDialog onClose={handleDialogClose} />
         <ModalMessage type={modalState.type} title={modalState.title}>
           {modalState.message}
