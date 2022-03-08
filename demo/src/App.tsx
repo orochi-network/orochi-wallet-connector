@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { IWallet, WalletConnector } from '@orochi-network/wallet-connector';
 import './App.css';
+import {Button} from "@mui/material";
 
 function App() {
   const [wallet, setWallet] = useState<null | IWallet>(null);
@@ -27,7 +28,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <WalletConnector onConnect={onConnect} chainId={56} onChange={onChange} onDisconnect={onDisconnect} />
+        <WalletConnector onConnect={onConnect} chainId={56} onChange={onChange} onDisconnect={onDisconnect} connectButton={<Button variant="contained">This is connect button</Button>} />
         <div>
           <p>Connected address: {address || '...'}</p>
         </div>
