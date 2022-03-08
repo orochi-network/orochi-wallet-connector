@@ -34,8 +34,8 @@ export interface IWalletConnectorProps {
   chainId?: number;
   onDisconnect: (error: Error | null) => void;
   onChange?: (address: string) => void;
-  connectButton?: React.ReactElement;
-  disconnectButton?: React.ReactElement;
+  connectButton?: React.ReactElement<any>;
+  disconnectButton?: React.ReactElement<any>;
 }
 
 export const SupportedNetwork = new Map<number, string>([
@@ -224,9 +224,13 @@ export function WalletConnector(props: IWalletConnectorProps) {
   return (
     <>
       <WalletConnectorContext.Provider value={{ ...context, dispatch: overrideDispatch }}>
-        {!isConnected ?
-            cloneElement(props.connectButton || <Button variant='contained'>Connect</Button>, {onClick: handleButtonConnect }) :
-            cloneElement(props.disconnectButton || <Button variant='contained'>Disconnect</Button>, {onClick: handleButtonDisconnect })}
+        {!isConnected
+          ? cloneElement(props.connectButton || <Button variant="contained">Connect</Button>, {
+              onClick: handleButtonConnect,
+            })
+          : cloneElement(props.disconnectButton || <Button variant="contained">Disconnect</Button>, {
+              onClick: handleButtonDisconnect,
+            })}
         <WalletConnectorDialog onClose={handleDialogClose} />
         <ModalMessage type={modalState.type} title={modalState.title}>
           {modalState.message}
