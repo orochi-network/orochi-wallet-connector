@@ -1,6 +1,6 @@
 {
   "name": "@orochi-network/wallet-connector",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "chiro8x@gmail.com",
   "keywords": [
     "wallet connector",
@@ -35,7 +35,7 @@
     "demo": "cd ./demo && yarn start",
     "fix": "eslint --config .eslintrc.json --fix --ignore-path .eslintignore ./src/**/*.ts",
     "check": "npm run fix && npx prettier --check --write ./src/**/* && npm run build",
-    "release": "npm run check && node ./devel.js && npm publish --access public"
+    "release": "npm run check && npm publish --access public"
   },
   "peerDependencies": {
     "react": "^17.0.2"
