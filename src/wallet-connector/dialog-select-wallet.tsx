@@ -7,15 +7,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import { WalletConnectorContext } from './context';
 import { toCamelCase, toKey } from './utilities';
-import metaMaskIcon from '../static/metamask.png';
-import walletConnectIcon from '../static/walletconnect.png';
 
 const supportedWallets = ['MetaMask', 'WalletConnect'];
 
 export function WalletConnectorDialog(props: { onClose: (_connectType: string) => void }) {
   const images = {
-    metaMask: metaMaskIcon,
-    walletConnect: walletConnectIcon,
+    metaMask: 'https://assets.duelistking.com/metamask.png',
+    walletConnect: 'https://assets.duelistking.com/walletconnect.png',
   };
 
   return (
