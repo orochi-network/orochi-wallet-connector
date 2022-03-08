@@ -1,6 +1,6 @@
 {
   "name": "@orochi-network/wallet-connector",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "chiro8x@gmail.com",
   "keywords": [
     "wallet connector",
@@ -28,8 +28,9 @@
     "typescript": "^4.5.5"
   },
   "scripts": {
-    "build:esm": "tsc && mkdir -p ./build/esm/static && cp ./src/static/*.* ./build/esm/static",
-    "build": "npm run build:esm",
+    "build:esm": "tsc",
+    "build:cjs": "tsc --module commonjs --outDir build/cjs",
+    "build": "npm run build:esm && npm run build:cjs",
     "dev": "npx nodemon -e ts,tsx -w ./src -x \"npm run build\"",
     "demo": "cd ./demo && yarn start",
     "fix": "eslint --config .eslintrc.json --fix --ignore-path .eslintignore ./src/**/*.ts",
