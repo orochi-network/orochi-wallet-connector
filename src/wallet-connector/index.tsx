@@ -32,10 +32,11 @@ export interface IWalletConnectorState {
 export interface IWalletConnectorProps {
   onConnect: (error: Error | null, walletInstance: IWallet) => void;
   chainId?: number;
-  onDisconnect: (error: Error | null) => void;
+  onDisconnect?: (error: Error | null) => void;
   onChange?: (address: string) => void;
   connectButton?: React.ReactElement<any>;
   disconnectButton?: React.ReactElement<any>;
+  hideDisconnectButton?: boolean;
 }
 
 export const SupportedNetwork = new Map<number, string>([
@@ -61,7 +62,7 @@ export function WalletConnector(props: IWalletConnectorProps) {
     localStorage.removeItem('wallet-connector-type');
     localStorage.removeItem('wallet-connector-chain-id');
     overrideDispatch('wallet-disconnected', DefaultWalletConnectorContext);
-    props.onDisconnect(error);
+    if (props.onDisconnect) props.onDisconnect(error);
   };
 
   const getChainId = () => {
@@ -221,22 +222,34 @@ export function WalletConnector(props: IWalletConnectorProps) {
     }
   };
 
-  return (
-    <>
+  if (props.hideDisconnectButton) {
+    return (
       <WalletConnectorContext.Provider value={{ ...context, dispatch: overrideDispatch }}>
-        {!isConnected
-          ? cloneElement(props.connectButton || <Button variant="contained">Connect</Button>, {
-              onClick: handleButtonConnect,
-            })
-          : cloneElement(props.disconnectButton || <Button variant="contained">Disconnect</Button>, {
-              onClick: handleButtonDisconnect,
-            })}
+        {cloneElement(props.connectButton || <Button variant="contained">Connect</Button>, {
+          onClick: handleButtonConnect,
+        })}
         <WalletConnectorDialog onClose={handleDialogClose} />
         <ModalMessage type={modalState.type} title={modalState.title}>
           {modalState.message}
         </ModalMessage>
       </WalletConnectorContext.Provider>
-    </>
+    );
+  }
+
+  return (
+    <WalletConnectorContext.Provider value={{ ...context, dispatch: overrideDispatch }}>
+      {!isConnected
+        ? cloneElement(props.connectButton || <Button variant="contained">Connect</Button>, {
+            onClick: handleButtonConnect,
+          })
+        : cloneElement(props.disconnectButton || <Button variant="contained">Disconnect</Button>, {
+            onClick: handleButtonDisconnect,
+          })}
+      <WalletConnectorDialog onClose={handleDialogClose} />
+      <ModalMessage type={modalState.type} title={modalState.title}>
+        {modalState.message}
+      </ModalMessage>
+    </WalletConnectorContext.Provider>
   );
 }
 
