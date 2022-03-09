@@ -37,6 +37,13 @@ export interface IWalletConnectorProps {
   connectButton?: React.ReactElement<any>;
   disconnectButton?: React.ReactElement<any>;
   hideDisconnectButton?: boolean;
+  isInvisible?: boolean;
+}
+
+export interface IWalletConnectorHandle {
+  connect: () => void;
+  disconnect: () => void;
+  getWallet: () => IWallet | null;
 }
 
 export const SupportedNetwork = new Map<number, string>([
@@ -50,7 +57,10 @@ export const SupportedNetwork = new Map<number, string>([
 
 export const DefaultChainID = 56; // Binance Smart Chain
 
-export function WalletConnector(props: IWalletConnectorProps) {
+const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorHandle, IWalletConnectorProps> = (
+  props,
+  ref,
+) => {
   const [context, dispatch] = useReducer(WalletConnectorReducer, DefaultWalletConnectorContext);
   const [modalState, setModalState] = useState({ title: 'Unknown Error', message: 'Unknown error', type: 'info' });
   const [isConnected, setIsConnected] = useState(false);
@@ -222,6 +232,46 @@ export function WalletConnector(props: IWalletConnectorProps) {
     }
   };
 
+  const getWallet = () => {
+    if (isConnected) {
+      const connectType = localStorage.getItem('wallet-connector-type') || '';
+      switch (connectType) {
+        case EConnectType.metamask: {
+          return CoreMetaMask.getInstance();
+        }
+        case EConnectType.walletconnect: {
+          return CoreWalletConnect.getInstance();
+        }
+        default:
+          return null;
+      }
+    }
+    return null;
+  };
+
+  React.useImperativeHandle(ref, () => ({
+    connect: () => {
+      return handleButtonConnect();
+    },
+    disconnect: () => {
+      return handleButtonDisconnect();
+    },
+    getWallet: () => {
+      return getWallet();
+    },
+  }));
+
+  if (props.isInvisible) {
+    return (
+      <WalletConnectorContext.Provider value={{ ...context, dispatch: overrideDispatch }}>
+        <WalletConnectorDialog onClose={handleDialogClose} />
+        <ModalMessage type={modalState.type} title={modalState.title}>
+          {modalState.message}
+        </ModalMessage>
+      </WalletConnectorContext.Provider>
+    );
+  }
+
   if (props.hideDisconnectButton) {
     return (
       <WalletConnectorContext.Provider value={{ ...context, dispatch: overrideDispatch }}>
@@ -251,6 +301,8 @@ export function WalletConnector(props: IWalletConnectorProps) {
       </ModalMessage>
     </WalletConnectorContext.Provider>
   );
-}
+};
+
+export const WalletConnector = React.forwardRef(WalletConnectorComponent);
 
 export * from './core';
