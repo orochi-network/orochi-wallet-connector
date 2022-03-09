@@ -19,7 +19,7 @@ export function WalletConnectorDialog(props: { onClose: (_connectType: string) =
   return (
     <WalletConnectorContext.Consumer>
       {({ dialogOpen }) => (
-        <Dialog onClose={props.onClose} open={dialogOpen}>
+        <Dialog onClose={props.onClose} open={dialogOpen} style={{ zIndex: '99999' }}>
           <DialogTitle>Choose supported wallet</DialogTitle>
           <List sx={{ pt: 0 }}>
             {supportedWallets.map((item) => (
