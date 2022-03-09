@@ -59,7 +59,7 @@ export default function ModalMessage(props: { title: string; type?: string; chil
           </Typography>
           <Typography textAlign="right"></Typography>
           {props.type === 'error' ? (
-            <pre style={{ textAlign: 'left', overflowY: 'scroll', maxHeight: '200px', maxWidth: '300px' }}>
+            <pre style={{ textAlign: 'left', overflowY: 'scroll', maxHeight: '300px', maxWidth: '350px' }}>
               {props.children}
             </pre>
           ) : (
