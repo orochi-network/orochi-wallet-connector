@@ -38,6 +38,7 @@ export interface IWalletConnectorProps {
   disconnectButton?: React.ReactElement<any>;
   hideDisconnectButton?: boolean;
   isInvisible?: boolean;
+  isIgnoreChainId?: boolean;
 }
 
 export interface IWalletConnectorHandle {
@@ -88,7 +89,7 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
     if (typeof window.ethereum !== 'undefined') {
       const wallet = CoreMetaMask.getInstance();
       wallet
-        .connect(getChainId())
+        .connect(getChainId(), props.isIgnoreChainId)
         .then((address: string) => {
           const chainId = getChainId();
           if (typeof localStorage !== 'undefined') {
@@ -122,7 +123,7 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
       if (type === EConnectType.metamask) {
         const wallet = CoreMetaMask.getInstance();
         if (wallet.isConnected()) {
-          wallet.connect(chainId).then(() => {
+          wallet.connect(chainId, props.isIgnoreChainId).then(() => {
             setIsConnected(true);
           });
           wallet.onDisconnect(() => {
@@ -176,7 +177,7 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
   const onConnectWalletConnect = () => {
     const wallet = CoreWalletConnect.getInstance();
     wallet
-      .connect(getChainId())
+      .connect(getChainId(), props.isIgnoreChainId)
       .then((address: string) => {
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('wallet-connector-type', EConnectType.walletconnect);
@@ -189,7 +190,10 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
           removeSessionAndDispatchDisconnectEvent(err);
         });
       })
-      .catch((err: Error) => showModal('error', err.message, err.stack || 'Unknown reason'))
+      .catch((err: Error) => {
+        localStorage.removeItem('walletconnect');
+        showModal('error', err.message, err.stack || 'Unknown reason');
+      })
       .finally(() => overrideDispatch('close-dialog', { dialogOpen: false }));
   };
 

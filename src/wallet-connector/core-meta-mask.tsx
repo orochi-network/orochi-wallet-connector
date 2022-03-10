@@ -40,13 +40,15 @@ export class CoreMetaMask implements IWallet {
     return singleton.get(instanceName) as CoreMetaMask;
   }
 
-  public async connect(chainId: number) {
+  public async connect(chainId: number, isIgnoreChainId: boolean = false) {
     if (chainId === 0) throw new Error('Invalid chainId');
     const [walletAddress] = await ethereum.request({ method: 'eth_requestAccounts' });
-    this.address = walletAddress;
-    this.chainId = chainId;
-    // We are on different network
     const currentChainId = await ethereum.request({ method: 'eth_chainId' });
+    this.address = walletAddress;
+    this.chainId = currentChainId;
+    if (isIgnoreChainId) return walletAddress;
+
+    // We are on different network
     if (currentChainId !== toChainIdString(chainId)) {
       await this.switchNetwork(chainId);
     }
