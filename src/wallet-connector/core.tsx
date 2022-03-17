@@ -3,8 +3,9 @@ export interface ITransaction {
   to: string;
   data?: string;
   value?: string | number;
-  gas?: string | number;
-  gasLimit?: string | number;
+  gas?: string;
+  gasLimit?: string;
+  gasPrice?: string;
 }
 
 export interface IWallet {
