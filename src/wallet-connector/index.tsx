@@ -53,6 +53,7 @@ export const SupportedNetwork = new Map<number, string>([
   [137, 'Polygon Mainnet'],
   [250, 'Fantom Opera'],
   [4002, 'Fantom Testnet'],
+  [80001, 'Mumbai Testnet'], // Polygon testnet
   [31337, 'Localhost'], // Hardhat localhost
 ]);
 
