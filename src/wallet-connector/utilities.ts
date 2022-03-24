@@ -31,6 +31,20 @@ export const networkData: { [key: string]: any } = {
     rpcUrls: ['http://127.0.0.1:8545'],
     blockExplorerUrls: ['http://127.0.0.1:8545'],
   },
+  '0x89': {
+    chainId: '0x89',
+    chainName: 'Polygon Mainnet',
+    nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+    rpcUrls: ['https://polygon-rpc.com'],
+    blockExplorerUrls: ['https://polygonscan.com/'],
+  },
+  '0x13881': {
+    chainId: '0x13881',
+    chainName: 'Mumbai Testnet',
+    nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+    rpcUrls: ['https://rpc-mumbai.matic.today/'],
+    blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
+  },
 };
 
 const onceSync = new Map<string, boolean>();
