@@ -7,6 +7,7 @@ import { DefaultWalletConnectorContext, WalletConnectorContext, WalletConnectorR
 import { CoreMetaMask } from './core-meta-mask';
 import CoreWalletConnect from './core-wallet-connect';
 import { IWallet, EConnectType } from './core';
+import { toChainIdNumber } from './utilities';
 
 declare let localStorage: any;
 
@@ -156,7 +157,7 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
 
   // Metamask strongly recommend refresh web page
   const handleMetamaskChangeChain = (chainId: string) => {
-    localStorage.setItem('wallet-connector-chain-id', chainId);
+    localStorage.setItem('wallet-connector-chain-id', toChainIdNumber(chainId));
     window.location.reload();
   };
 
