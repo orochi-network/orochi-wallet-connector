@@ -155,7 +155,8 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
   };
 
   // Metamask strongly recommend refresh web page
-  const handleMetamaskChangeChain = () => {
+  const handleMetamaskChangeChain = (chainId: string) => {
+    localStorage.setItem('wallet-connector-chain-id', chainId);
     window.location.reload();
   };
 
