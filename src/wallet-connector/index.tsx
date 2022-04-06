@@ -40,6 +40,7 @@ export interface IWalletConnectorProps {
   hideDisconnectButton?: boolean;
   isInvisible?: boolean;
   isIgnoreChainId?: boolean;
+  dialogOpenTitle?: string;
 }
 
 export interface IWalletConnectorHandle {
@@ -271,7 +272,7 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
   if (props.isInvisible) {
     return (
       <WalletConnectorContext.Provider value={{ ...context, dispatch: overrideDispatch }}>
-        <WalletConnectorDialog onClose={handleDialogClose} />
+        <WalletConnectorDialog onClose={handleDialogClose} dialogOpenTitle={props.dialogOpenTitle} />
         <ModalMessage type={modalState.type} title={modalState.title}>
           {modalState.message}
         </ModalMessage>
@@ -285,7 +286,7 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
         {cloneElement(props.connectButton || <Button variant="contained">Connect</Button>, {
           onClick: handleButtonConnect,
         })}
-        <WalletConnectorDialog onClose={handleDialogClose} />
+        <WalletConnectorDialog onClose={handleDialogClose} dialogOpenTitle={props.dialogOpenTitle} />
         <ModalMessage type={modalState.type} title={modalState.title}>
           {modalState.message}
         </ModalMessage>
@@ -302,7 +303,7 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
         : cloneElement(props.disconnectButton || <Button variant="contained">Disconnect</Button>, {
             onClick: handleButtonDisconnect,
           })}
-      <WalletConnectorDialog onClose={handleDialogClose} />
+      <WalletConnectorDialog onClose={handleDialogClose} dialogOpenTitle={props.dialogOpenTitle} />
       <ModalMessage type={modalState.type} title={modalState.title}>
         {modalState.message}
       </ModalMessage>

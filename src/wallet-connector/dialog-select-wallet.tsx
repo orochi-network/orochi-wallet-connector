@@ -10,17 +10,16 @@ import { toCamelCase, toKey } from './utilities';
 
 const supportedWallets = ['MetaMask', 'WalletConnect'];
 
-export function WalletConnectorDialog(props: { onClose: (_connectType: string) => void }) {
+export function WalletConnectorDialog(props: { onClose: (_connectType: string) => void; dialogOpenTitle?: string }) {
   const images = {
     metaMask: 'https://assets.duelistking.com/metamask.png',
     walletConnect: 'https://assets.duelistking.com/walletconnect.png',
   };
-
   return (
     <WalletConnectorContext.Consumer>
       {({ dialogOpen }) => (
         <Dialog onClose={props.onClose} open={dialogOpen} style={{ zIndex: '99999' }}>
-          <DialogTitle>Choose supported wallet</DialogTitle>
+          <DialogTitle>{props.dialogOpenTitle || 'Choose supported wallet'}</DialogTitle>
           <List sx={{ pt: 0 }}>
             {supportedWallets.map((item) => (
               <ListItem button onClick={() => props.onClose(toKey(item))} key={toKey(item)}>

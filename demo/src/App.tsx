@@ -34,6 +34,7 @@ function App() {
           onChange={onChange}
           onDisconnect={onDisconnect}
           connectButton={<Button variant="contained">This is connect button</Button>}
+          dialogOpenTitle={'Choose another text'}
           // isIgnoreChainId={true}
         />
         <div>
