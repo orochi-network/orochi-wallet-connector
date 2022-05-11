@@ -54,6 +54,7 @@ export class CoreWalletConnect implements IWallet {
       // Get provided accounts and chainId
       const { accounts, chainId } = payload.params[0];
       if (!isIgnoreChainId && chainId !== this.chainId) {
+        this.walletConnectInstance.killSession();
         return this.reject(
           new Error(
             `WalletConnect Error: ChainId is different. Please connect to ${SupportedNetwork.get(this.chainId)} `,
