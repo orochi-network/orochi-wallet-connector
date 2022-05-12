@@ -41,6 +41,7 @@ export interface IWalletConnectorProps {
   isInvisible?: boolean;
   isIgnoreChainId?: boolean;
   dialogOpenTitle?: string;
+  debugMode?: boolean;
 }
 
 export interface IWalletConnectorHandle {
@@ -111,7 +112,7 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
             removeSessionAndDispatchDisconnectEvent();
           });
         })
-        .catch((err: Error) => showModal('error', err.message, err.stack || 'Unknown reason'))
+        .catch((err: Error) => showModal('error', err.message, props.debugMode ? err.stack || 'Unknown reason' : ''))
         .finally(() => overrideDispatch('close-dialog', { dialogOpen: false }));
     } else {
       showModal('error', 'Metamask Not Found', "Metamask wallet wasn't installed");
@@ -196,7 +197,7 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
       })
       .catch((err: Error) => {
         localStorage.removeItem('walletconnect');
-        showModal('error', err.message, err.stack || 'Unknown reason');
+        showModal('error', err.message, props.debugMode ? err.stack || 'Unknown reason' : '');
       })
       .finally(() => overrideDispatch('close-dialog', { dialogOpen: false }));
   };
