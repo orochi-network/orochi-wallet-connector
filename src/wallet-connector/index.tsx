@@ -315,3 +315,4 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
 export const WalletConnector = React.forwardRef(WalletConnectorComponent);
 
 export * from './core';
+export * from './hook';
