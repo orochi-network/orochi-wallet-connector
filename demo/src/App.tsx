@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import { IWallet, WalletConnector } from '@orochi-network/wallet-connector';
+import { IWallet, WalletConnector, useWalletConnector } from '@orochi-network/wallet-connector';
 import './App.css';
 import { Button } from '@mui/material';
 
 function App() {
   const [wallet, setWallet] = useState<null | IWallet>(null);
   const [address, setAddress] = useState<null | string>(null);
+  const { getConnectedWallet } = useWalletConnector();
 
   const onConnect = (err: Error | null, wallet: IWallet) => {
     if (err === null) {
@@ -24,6 +25,10 @@ function App() {
       setAddress(null);
     }
   }, []);
+
+  const onClickDisconnect = () =>{
+    getConnectedWallet()?.disconnect()
+  }
 
   return (
     <div className="App">
