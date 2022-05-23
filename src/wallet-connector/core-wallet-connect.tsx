@@ -16,6 +16,8 @@ export class CoreWalletConnect implements IWallet {
 
   private walletConnectInstance: WalletConnect = {} as WalletConnect;
 
+  private instanceName: string = '';
+
   private resolve: (value: any) => void = () => undefined;
 
   private reject: (reason: any) => void = () => undefined;
@@ -31,7 +33,8 @@ export class CoreWalletConnect implements IWallet {
     return this.chainId;
   }
 
-  constructor() {
+  constructor(instanceName: string) {
+    this.instanceName = instanceName;
     this.reloadWalletConnect();
     this.connected = this.walletConnectInstance.connected;
     if (this.connected) {
@@ -44,6 +47,7 @@ export class CoreWalletConnect implements IWallet {
     this.walletConnectInstance = new WalletConnect({
       bridge: 'https://bridge.walletconnect.org', // Required
       qrcodeModal: QRCodeModal,
+      storageId: this.instanceName,
     });
 
     this.walletConnectInstance.on('connect', (error, payload) => {
@@ -68,11 +72,12 @@ export class CoreWalletConnect implements IWallet {
     });
   }
 
-  public static getInstance(instanceName: string = 'wallet-connect'): CoreWalletConnect {
-    if (!singleton.has(instanceName)) {
-      singleton.set(instanceName, new CoreWalletConnect());
+  public static getInstance(chainId: number, instanceName: string = 'wallet-connect'): CoreWalletConnect {
+    const chainInstanceName = `${instanceName}-${chainId}`;
+    if (!singleton.has(chainInstanceName)) {
+      singleton.set(chainInstanceName, new CoreWalletConnect(chainInstanceName));
     }
-    return singleton.get(instanceName) as CoreWalletConnect;
+    return singleton.get(chainInstanceName) as CoreWalletConnect;
   }
 
   public connect(chainId: number, isIgnoreChainId: boolean = false): Promise<string> {
