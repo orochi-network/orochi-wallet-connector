@@ -5,16 +5,16 @@ import CoreWalletConnect from './core-wallet-connect';
 export const useWalletConnector = () => {
   const getConnectedWallet = () => {
     if (localStorage) {
-      const isConnected = localStorage.getItem('wallet-connector-chain-id');
-      
-      if (isConnected) {
+      const chainId = localStorage.getItem('wallet-connector-chain-id');
+
+      if (chainId) {
         const connectType = localStorage.getItem('wallet-connector-type') || '';
         switch (connectType) {
           case EConnectType.metamask: {
             return CoreMetaMask.getInstance();
           }
           case EConnectType.walletconnect: {
-            return CoreWalletConnect.getInstance();
+            return CoreWalletConnect.getInstance(+chainId);
           }
           default:
             return null;

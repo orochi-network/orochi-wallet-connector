@@ -138,7 +138,7 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
           onConnectMetamask();
         }
       } else if (type === EConnectType.walletconnect) {
-        const wallet = CoreWalletConnect.getInstance();
+        const wallet = CoreWalletConnect.getInstance(getChainId());
         if (wallet.isConnected()) {
           setIsConnected(true);
           wallet.onDisconnect((err) => {
@@ -180,9 +180,11 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
   }, []);
 
   const onConnectWalletConnect = () => {
-    const wallet = CoreWalletConnect.getInstance();
+    const chainId = getChainId()
+    const wallet = CoreWalletConnect.getInstance(getChainId());
+
     wallet
-      .connect(getChainId(), props.isIgnoreChainId)
+      .connect(chainId, props.isIgnoreChainId)
       .then((address: string) => {
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('wallet-connector-type', EConnectType.walletconnect);
@@ -230,7 +232,7 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
           break;
         }
         case EConnectType.walletconnect: {
-          const wallet = CoreWalletConnect.getInstance();
+          const wallet = CoreWalletConnect.getInstance(getChainId());
           await wallet.disconnect();
           break;
         }
@@ -249,7 +251,7 @@ const WalletConnectorComponent: React.ForwardRefRenderFunction<IWalletConnectorH
           return CoreMetaMask.getInstance();
         }
         case EConnectType.walletconnect: {
-          return CoreWalletConnect.getInstance();
+          return CoreWalletConnect.getInstance(getChainId());
         }
         default:
           return null;
